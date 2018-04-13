@@ -1,0 +1,15 @@
+{
+  "presets" : [
+  	["env",{
+  	  "targets" : {
+  	  	"ie" : "10",
+  	  	modules: 'false'
+  	  }
+  	}]
+  ],
+  "plugins" : [
+  	"transform-runtime",
+  	"transform-es2015-classes",
+  	["transform-class-properties", { "spec": true }]
+  ]
+}
