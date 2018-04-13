@@ -1,5 +1,5 @@
 
-# [._] (typedscript.js) in "feature/Type"
+# [._] StrongType
 Meta 가득한 **Meta Type** 라이브러리
 >현재 두 가지 형태의 라이브러리가 제작중에 있습니다.
 >하나는 mater 브랜치에, 하나는 feature/Type 브랜치에 존재합니다.
