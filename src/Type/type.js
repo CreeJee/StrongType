@@ -74,7 +74,11 @@ class _Type {
 				return conversionValue;
 			}
 		}
-		else if(ref === object || ref === object.constructor){
+		//each case
+		//1. it is same object
+		//2. ref is constructor but,object is Instance
+		//3. just same type for constructor
+		else if(Object.is(ref,object) || ref === object.constructor || ref.constructor === object.constructor){
 			return object;
 		}
 		throw new TypeError(`{need : ${_Type.__getName__(ref)},value : ${_Type.__getName__(object)}} in {${this.toString()}}`)
