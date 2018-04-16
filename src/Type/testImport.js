@@ -109,15 +109,30 @@ class Block extends _Type{
 
 //testcase at Functionbody at class
 
-const conf = new _MetaFunction(
-	[Function],
+const fns = new _MetaFunction(
+	["",""],
+	function(name,value){
+		console.log(name,value);
+	}
+);
+const classFn = new _MetaFunction(
+	["",""],
 	class{
-		static get _(){
-			return "valueObj";
+		constructor(name,value){
+			console.log(name,value);
 		}
 	}
 );
-console.log(conf._)
+const arrowFn = new _MetaFunction(
+	["",""],
+	(name,value) => {
+		console.log(name,value);
+	}
+	
+);
+console.log(new fns("Str","value"))
+console.log(new classFn("Str","value"))
+console.log(arrowFn("Str","value"))
 /*
 console.log(
 	new conf(

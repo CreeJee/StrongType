@@ -146,7 +146,8 @@ const _MetaFunction = class _MetaFunction extends _Type{
 			function generatedMeta() {
 				const argument = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
 				if (this instanceof _MetaFunction) {
-					return this.apply(this,argument);
+					//is nomral bind
+					return __instance__.apply(this,argument);
 				}
 				else{
 					return new _func(...argument);
@@ -160,7 +161,6 @@ const _MetaFunction = class _MetaFunction extends _Type{
 			generatedMeta.apply = this.apply.bind(this);
 			generatedMeta.valueOf = this.valueOf.bind(this);
 			generatedMeta.toString = this.toString.bind(this);
-			generatedMeta.toSource = this.toSource.bind(this);
 			//class static or prototype static override
 			for(let k of Object.getOwnPropertyNames(_func)){
 				if (descriptors[k].configurable != false && descriptors[k].writable != false) {
