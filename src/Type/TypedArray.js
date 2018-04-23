@@ -18,7 +18,7 @@ class _TypedArray extends Array{
 	constructor(type,...items){
 		type = new ((type instanceof Function) ? type : type.constructor)(); // type to object (for constructor name)
 		_TypedArray.__TypeCheck__(type,...items);
-		super(items);
+		super(...items);
 		this.type = type;
 	}
 	push(){
