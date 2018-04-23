@@ -19,7 +19,12 @@ class _TypedArray extends Array{
 		type = new ((type instanceof Function) ? type : type.constructor)(); // type to object (for constructor name)
 		_TypedArray.__TypeCheck__(type,...items);
 		super(...items);
-		this.type = type;
+		Object.defineProperty(this,"type",{
+			enumerable: false,
+			configurable: true,
+			writable: false,
+			value: type
+		});
 	}
 	push(){
 		let arg = argumentArray(arguments);
