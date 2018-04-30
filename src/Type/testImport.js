@@ -109,30 +109,30 @@ class Block extends _Type{
 
 //testcase at Functionbody at class
 
-const fns = new _MetaFunction(
-	["",""],
-	function(name,value){
-		console.log(name,value);
-	}
-);
-const classFn = new _MetaFunction(
-	["",""],
-	class{
-		constructor(name,value){
-			console.log(name,value);
-		}
-	}
-);
-const arrowFn = new _MetaFunction(
-	["",""],
-	(name,value) => {
-		console.log(name,value);
-	}
+// const fns = new _MetaFunction(
+// 	["",""],
+// 	function(name,value){
+// 		console.log(name,value);
+// 	}
+// );
+// const classFn = new _MetaFunction(
+// 	["",""],
+// 	class{
+// 		constructor(name,value){
+// 			console.log(name,value);
+// 		}
+// 	}
+// );
+// const arrowFn = new _MetaFunction(
+// 	["",""],
+// 	(name,value) => {
+// 		console.log(name,value);
+// 	}
 	
-);
-console.log(new fns("Str","value"))
-console.log(new classFn("Str","value"))
-console.log(arrowFn("Str","value"))
+// );
+// console.log(new fns("Str","value"))
+// console.log(new classFn("Str","value"))
+// console.log(arrowFn("Str","value"))
 /*
 console.log(
 	new conf(
@@ -169,3 +169,9 @@ new _MetaFunction(
 )(new Block("String"))
 
 */
+let lamdba = new _MetaFunction(
+	[_MetaFunction.__Types(String,Number)],
+	function(maybeType) {
+		console.log(typeof maybeType,"content : ",maybeType)
+	}
+)(new Block("String"))

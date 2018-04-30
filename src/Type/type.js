@@ -14,7 +14,6 @@ class _Type {
 	conversion(value){
 		return null; //default conversion is false
 	}
-	//망명이 겹칠것같지만 실제값은 안쪽에 저장됨으로 X
 	get __name(){
 		if(this.constructor === _Type){
 			return "_Type";

@@ -1,5 +1,6 @@
 //logic
 const _Type = require('./type.js');
+const Enum = require('./enum.js');
 function isClass(v) {
   	var toString = Function.prototype.toString;
 	function fnBody(fn) {
@@ -29,18 +30,32 @@ class _MetaBoundStruct{
 		this.argument = argument;
 	}
 };
+
+/*
+ *	__Spread 및 __MultiType 처리시 타입에 대하여 필터링을 해야 하는가?
+ * 	하게된다면 _MetaFunction에서 진행하게 될탠데 합당한가?
+ */
 class __Spread{
 	get __name(){
 		return "__Spread";
 	}
 	constructor(type,length){
+		if (typeof type !== "function") {
+
+		}
 		this.type = type;
 		this.length = (Number.isInteger(length)) ? length : Infinity;
 	}
-	fill(){
-
+};
+class __Types extends Enum{
+	get __name(){
+		return "__Types";
 	}
-}
+	constructor(...types){
+		super(...types);
+	}
+};
+
 /**
  * @class _MetaFunction
  * @description Fixed Type Function
@@ -98,29 +113,47 @@ const _MetaFunction = class _MetaFunction extends _Type{
 	static __Spread(type,range){
 		return new __Spread(type,range);
 	}
+	static __Types(...type){
+		return new __Types(...type);
+	}
 	static __argumentCheck__(argument,struct,index = 0,len){
-		let __spreadObj = {};
-		let __spreadArray = null;
+		let selectedStruct = {};
+		let selectedObj = {};
 		if (Array.isArray(argument) && Array.isArray(struct)) {
 
 			len = (len === undefined) ? struct.length-1 : len;
 			if(index > len){
 				return argument;
 			}
-			else if (struct[index] instanceof __Spread) {
-				__spreadObj = struct[index];
-				__spreadArray = new Array(__spreadObj.length === Infinity ? (argument.length - index) : __spreadObj.length).fill(__spreadObj.type);
-				len += __spreadArray.length-1;//spread object가 빠지는거 고려해서 1씩 처리됨 
-				if(len > argument.length-1){//배열 인댁스 관련 빼기
-					throw new TypeError("wrong spreadObj length matching");
-				}
-				else{
-					struct.splice(index,1,...__spreadArray); //spread 오브젝트빠짐 
-				}
-			}
 			else{
-				argument[index] = _Type.__equalType__(argument[index],struct[index]);
-				index++;
+				selectedStruct = struct[index];
+				selectedObj = argument[index];
+				//내부 class이기에 상속은 베제
+				switch(selectedStruct.constructor){
+					case __Spread :
+						let __spreadArray = new Array(selectedStruct.length === Infinity ? (argument.length - index) : selectedStruct.length).fill(selectedStruct.type);
+						len += __spreadArray.length-1;//spread object가 빠지는거 고려해서 1씩 처리됨 
+						if(len > argument.length-1){//배열 인댁스 관련 빼기
+							throw new TypeError("wrong spreadObj length matching");
+						}
+						else{
+							struct.splice(index,1,...__spreadArray); //spread 오브젝트빠짐 
+						}
+						break;
+					case __Types :
+						let __selectedType = selectedStruct.reduce((accr,value) => {
+							debugger;
+							if(_Type.__typeCheck__(selectedObj,value)){
+								return selectedObj;
+							}
+						});
+						struct.splice(index,1,__selectedType);
+						break;
+					default : 
+						argument[index] = _Type.__equalType__(argument[index],struct[index]);
+						index++;
+						break;
+				}
 			}
 			return _MetaFunction.__argumentCheck__(argument,struct,index,len);	
 		}
