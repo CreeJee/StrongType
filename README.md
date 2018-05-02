@@ -204,7 +204,6 @@ const EnumData = new Enum(Number,String);
 console.log(EnumData[0] === Number) //true
 console.log(EnumData[Number] === 0) //true
 
-//그외에는 배열과 같음
 ```
 ### method
 -  public
