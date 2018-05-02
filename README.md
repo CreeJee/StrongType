@@ -103,11 +103,63 @@ console.log(lambda.apply(null, [new _Type("foo"),new _Type("bar")] ))   //"foo/b
 
 lambda.bind(null,new _Type("binded_Str")); //binded lambda 
 console.log( lambda.call(null,new _Type("calledString")) ); 			//"binded_Str/calledString"
+
+//with spread
+const spreadLamdba = new _MetaFunction(
+	["",_MetaFunction.__Spread("")],
+	function(str,...spread) {
+		console.log(`${spread.join("")} ${str}`);
+	}
+);
+spreadLamdba("Type","s","p","r","e","a","d"); //spread Type
+
+//with spread range
+const spreadRangeLamdba = new _MetaFunction(
+	["",_MetaFunction.__Spread("",3)],
+	function(str,...spreadRange) {
+		console.log(`${str} : ${spreadRange.join("")}`)
+	}
+);
+spreadRangeLamdba("message","y","e","p"); //message : yep
+
+//with Types
+const TypedLamdba = new _MetaFunction(
+	[_MetaFunction.__Types(String,Number)],
+	function(maybeType) {
+		console.log(typeof maybeType,"content : ",maybeType)
+	}
+);
+TypedLamdba("String");//string content : String
+TypedLamdba(0);//number content : 0
+TypedLamdba(false);//throwen error
+
+//with class constructor
+const ClassLamdba = new _MetaFunction(
+	[String],
+	class{
+		constructor(str){
+			this.val = str;
+		}
+		//example to function inner meta function
+		get setVal(){
+			return new _MetaFunction(
+				[""],
+				(value) => {
+					this.value = value;
+				}
+			);
+		}
+	}
+);
+const metaString = new ClassLamada("types"); //constructor instanced
+const metaNumber = new ClassLamada(0); //throwen error
 ```
 > 함수를 생성자 혹은 class 로 사용하는것을 가능하지만 권장하진 않습니다.
 > (It is possible to use function or class as constructor, but it is not recommended.)
 ### method
 -  public
+	- \_\_Spread({type : Any,range : Number})
+	- \_\_Types({...type : Any})
 	- apply({thisArg : Any , argsApply : Array})
 	- bind({thisArg : Any , ...args : Any})
 	- call({thisArg : Any , ...args : Any})
@@ -119,19 +171,39 @@ console.log( lambda.call(null,new _Type("calledString")) ); 			//"binded_Str/cal
 > 배타버전 이며 사용시의 책임은 없음을 미리 명시합니다.
 ### 사용
 ```javascript
-const foo = new _T._TypedArray({type: Array , ...items : Any});
+const foo = new _T.TypedArray({type: Any , ...items : Any});
 ```
 ###  빠른 가이드
 ```javascript
 const _Type = _T._Type;
 const TypedArray = _T.TypedArray;
 
-const foo = new _Type("foo");
-const fooArray = new TypedArray(foo,new _Type("0"),new _Type("1")) //["0","1"]
-const errArray = new TypedArray(foo,new _Type(0),new _Type(1))		// 초기에 추가하는 타입과 다르니 에러 
+const NumberArray = new TypedArray(Number,0,1);
+const ErrorArray = new TypedArray(Number,"0","1");		// 초기에 추가하는 타입과 다르니 에러 
 
-fooArray.push(2); // 타입과 다르니 에러
-fooArray.push("2"); // 3
+NumberArray.push(2); // 3
+NumberArray.push("2"); // 타입과 다르니 에러
+//그외에는 배열과 같음
+```
+### method
+-  public
+	- constructor({type : Any , ...items : Any})
+		- 타입과 같아야함 
+## Enum
+열거형 대이터 처리
+> 배타버전 이며 사용시의 책임은 없음을 미리 명시합니다.
+### 사용
+```javascript
+const foo = new _T.Enum({...items : Any});
+```
+###  빠른 가이드
+```javascript
+const Enum = _T.Enum;
+
+const EnumData = new Enum(Number,String);
+console.log(EnumData[0] === Number) //true
+console.log(EnumData[Number] === 0) //true
+
 //그외에는 배열과 같음
 ```
 ### method
