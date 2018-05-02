@@ -67,7 +67,7 @@ class _Type {
 			conversionValue = ref.conversion(object);
 			vaildValue = ref.vaild(object);
 			if(vaildValue){
-				return object;
+				return conversionValue || object;
 			}
 			else if(conversionValue instanceof _Type){
 				return conversionValue;
@@ -80,7 +80,7 @@ class _Type {
 		else if(Object.is(ref,object) || ref === object.constructor || ref.constructor === object.constructor){
 			return object;
 		}
-		throw new TypeError(`{need : ${_Type.__getName__(ref)},value : ${_Type.__getName__(object)}} in {${this.toString()}}`)
+		throw new TypeError(`{need : [${_Type.__getName__(ref)} or ${ref.name}],value : ${_Type.__getName__(object)}} in {${this.toString()}}`)
 	}
 	__typeCheck__(object){
 		return _Type.__typeCheck__(object,this);

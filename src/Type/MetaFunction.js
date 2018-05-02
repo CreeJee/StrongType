@@ -141,12 +141,20 @@ const _MetaFunction = class _MetaFunction extends _Type{
 						}
 						break;
 					case __Types :
-						let __selectedType = selectedStruct.reduce((accr,value) => {
-							debugger;
-							if(_Type.__typeCheck__(selectedObj,value)){
-								return selectedObj;
+						let __structArray = Array.from(selectedStruct);
+						let __selectedType = __structArray.find((value) => {
+							try{
+								if(_Type.__typeCheck__(selectedObj,value)){
+									return value;
+								}
+							}
+							catch(e){
+								return false;
 							}
 						});
+						if(__selectedType === undefined){
+							throw new TypeError(`non matched Types at [${__structArray.join(",")}] value : ${selectedObj}`);
+						}
 						struct.splice(index,1,__selectedType);
 						break;
 					default : 

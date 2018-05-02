@@ -1,34 +1,20 @@
 const _Type = require('./type.js');
 
-const EnumSymbol = Symbol("MetaEnum");
-const EnumHandler = { 
-	get : function(target,name,receiver) {
-		for(let key of target.keys){
-			if(key.valueOf().toString() === name){
-				return target[EnumSymbol][key];
-			}
-		};
-		return undefined;
-	}
-};
 class Enum{
 	get __name(){
 		return "Enum";
 	}
-	get data(){
-		return this[EnumSymbol];
-	}
 	add(element){
 		let index = this.length;
-		Object.defineProperties(this[EnumSymbol], {
+		Object.defineProperties(this, {
 			[element] : {
-				configurable : true,
+				configurable : false,
 				enumerable : false,
 				writable : false,
 				value : index,
 			},
 			[index] : {
-				configurable : true,
+				configurable : false,
 				enumerable : true,
 				writable : false,
 				value : element,
@@ -37,16 +23,29 @@ class Enum{
 		this.length++;
 	}
 	[Symbol.toPrimitive](hint){
-		return this.get;
+		return Array.from(this);
+	}
+	*[Symbol.iterator](){
+		for (let i = 0; i < this.length; i++) {
+			yield this[i];
+		}
 	}
 	constructor(...enums){
-		this.length = 0;
-		this.keys = [];
-		this[EnumSymbol] = [];
+		Object.defineProperty(this,'length',{
+			configurable : true,
+			enumerable : false,
+			writable : true,
+			value : 0
+		});
+		Object.defineProperty(this,'__keys__',{
+			configurable : false,
+			enumerable : false,
+			writable : false,
+			value : []
+		});
 		enums.map((element,index) => {
-			this.keys.push(element,index);
 			if(isNaN(parseInt(element))){
-				if(this[EnumSymbol][element] !== undefined){
+				if(this[element] !== undefined){
 					throw new Error(`Duplicate identifier at ${element}`);
 				}
 				else{
@@ -58,7 +57,6 @@ class Enum{
 			}
 		
 		});
-		return new Proxy(this,EnumHandler);
 	}
 }
 module.exports = Enum;

@@ -174,4 +174,4 @@ let lamdba = new _MetaFunction(
 	function(maybeType) {
 		console.log(typeof maybeType,"content : ",maybeType)
 	}
-)(new Block("String"))
+)(false)
