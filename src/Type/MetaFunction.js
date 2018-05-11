@@ -169,12 +169,18 @@ const _MetaFunction = class _MetaFunction extends _Type{
 			throw new TypeError("argument and struct must Array");
 		}
 	}
+	//인자만 있는 버전의 매타 함수(타입 처리라기 좋음)
+	//
+	//
+	static getFunc(...types){
+		return this.constructor.bind(null,types);
+	}
 	constructor(_argumentStruct,_func) {
 		//함수의 인수 Bound처리
 		if (_argumentStruct instanceof Array && _func instanceof Function) {
 			//super
 			super(_func);
-			
+
 			//public
 			this.struct = _argumentStruct;
 			this.length = _func.length;
@@ -213,7 +219,7 @@ const _MetaFunction = class _MetaFunction extends _Type{
 				writable: false,
 				enumerable: false,
 				configurable: true,
-				value: _func.name || generatedMeta.name || `@generatedMeta<${Math.floor(Math.random()*999999)}>`
+				value: _func.name || generatedMeta.name || `@generatedMeta<${_argumentStruct.arguments.join(','))}>`
 			})
 			return generatedMeta;
 		}

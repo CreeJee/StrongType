@@ -171,7 +171,7 @@ new _MetaFunction(
 */
 let lamdba = new _MetaFunction(
 	[_MetaFunction.__Types(String,Number)],
-	function(maybeType) {
+	(maybeType)=>{
 		console.log(typeof maybeType,"content : ",maybeType)
 	}
 )(false)

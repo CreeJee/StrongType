@@ -26,7 +26,7 @@ const _Struct = class _Struct extends _Type{
 			static get name(){
 				return refType.__getName__();
 			}
-			get name(){
+			get __name(){
 				return this.constructor.name;
 			}
 			constructor(){
