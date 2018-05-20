@@ -5,6 +5,7 @@
 const _MetaFunction = require("./MetaFunction.js");
 const _Type = require("./type.js");
 const _Struct = require("./struct.js");
+const _Flow = require("../Util/Flow.js");
 const TypedArray = require("./TypedArray.js");
 
 //testClass
@@ -117,7 +118,7 @@ class Block extends _Type{
 // );
 // const classFn = new _MetaFunction(
 // 	["",""],
-// 	class{
+// 	class Fn{
 // 		constructor(name,value){
 // 			console.log(name,value);
 // 		}
@@ -168,10 +169,20 @@ new _MetaFunction(
 	}
 )(new Block("String"))
 
-*/
 let lamdba = new _MetaFunction(
 	[_MetaFunction.__Types(String,Number)],
 	(maybeType)=>{
 		console.log(typeof maybeType,"content : ",maybeType)
 	}
 )(false)
+*/
+const _flowCond = new _Flow();
+_flowCond.add(
+	true,
+	new _MetaFunction(
+		[Boolean],
+		function(cond) {
+			debugger;
+		}
+	)
+);

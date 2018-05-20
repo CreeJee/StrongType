@@ -24,7 +24,7 @@ class _Type {
 	}
 	//static system(it will be change..?)
 	static __getName__(obj){
-		return ((obj.__name || "").toString().length > 0) ? obj.__name : obj.constructor.name;
+		return ((obj.__name || "").toString().length > 0) ? obj.__name : (typeof obj === 'function' ? obj.name : "") || obj.constructor.name;
 	}
 	__getName__(){
 		return _Type.__getName__(this);
@@ -132,10 +132,10 @@ class _Type {
 			stackValue = this.value.toString();
 		}
 		else if(Array.isArray(this.value)) {
-			for(let entities of this.value){
-				tempArray.push(entities.toString());
-			}
-			stackValue = "["+tempArray.join(',')+"]";
+			stackValue = this.value.reduce((accr,value,index,array)=>{
+				return `${accr}${(index > 0) ? ',' : ''}${_Type.__getName__(value)}`;
+			},"")
+			stackValue = `[${stackValue}]`;
 		}
 		/*else if(this.value.constructor === Object){
 			stackValue = JSON.stringify(this.value);

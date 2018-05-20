@@ -104,8 +104,6 @@ class __Types extends Enum{
 	))("types")
 	
  */
-
-//TODO : _MetaFunction.__Spread의 인자에 ((rest)types,range) 방식 지원
 const _MetaFunction = class _MetaFunction extends _Type{
 	get __name(){
 		return "_MetaFunction";
@@ -169,15 +167,13 @@ const _MetaFunction = class _MetaFunction extends _Type{
 			throw new TypeError("argument and struct must Array");
 		}
 	}
-	//인자만 있는 버전의 매타 함수(타입 처리라기 좋음)
-	//
-	//
 	static getFunc(...types){
-		return this.constructor.bind(null,types);
+		return new _MetaFunction(types);
 	}
 	constructor(_argumentStruct,_func) {
 		//함수의 인수 Bound처리
-		if (_argumentStruct instanceof Array && _func instanceof Function) {
+		if (_argumentStruct instanceof Array) {
+			_func  = (_func instanceof Function) ? _func : function() {};
 			//super
 			super(_func);
 
@@ -185,6 +181,7 @@ const _MetaFunction = class _MetaFunction extends _Type{
 			this.struct = _argumentStruct;
 			this.length = _func.length;
 			this.name = _func.name;
+
 			//bound define
 			this.__bound__ = new _MetaBoundStruct(_func);
 
@@ -192,15 +189,15 @@ const _MetaFunction = class _MetaFunction extends _Type{
 			const __instance__ = this;
 			function generatedMeta() {
 				const argument = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
-				if (this instanceof _MetaFunction) {
+				if (this instanceof generatedMeta) {
+					return new _func(...argument);
+				}
+				else{
 					//is nomral bind
 					return __instance__.apply(this,argument);
 				}
-				else{
-					return new _func(...argument);
-				}
 			}
-			generatedMeta = generatedMeta.bind(this);
+			//generatedMeta = generatedMeta.bind(this);
 			const descriptors = Object.getOwnPropertyDescriptors(_func);
 			//dummy override
 			generatedMeta.call = this.call.bind(this);
@@ -214,12 +211,15 @@ const _MetaFunction = class _MetaFunction extends _Type{
 					Object.defineProperty(generatedMeta,k,descriptors[k]);
 				}
 			}
-			//name
+			let reduceArgument = _argumentStruct.reduce((accr,value,index)=>{
+				let ret = `${accr}${(index > 0) ? ',' : ''}${_Type.__getName__(value)}`;
+				return ret;
+			},"");
 			Object.defineProperty(generatedMeta,"name",{
 				writable: false,
 				enumerable: false,
 				configurable: true,
-				value: _func.name || generatedMeta.name || `@generatedMeta<${_argumentStruct.arguments.join(','))}>`
+				value: _func.name || `@_MetaFunction<${reduceArgument}>`
 			})
 			return generatedMeta;
 		}
@@ -255,7 +255,7 @@ const _MetaFunction = class _MetaFunction extends _Type{
 		}
 		else if(isClass(this._)){
 			_MetaFunction.__argumentCheck__(args,this.struct);
-			returnValue = this._.bind(thisArg,...args);
+			returnValue = new this._(...args);
 		}
 		else{
 			_MetaFunction.__argumentCheck__(args,this.struct);
