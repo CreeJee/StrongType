@@ -215,12 +215,21 @@ const _MetaFunction = class _MetaFunction extends _Type{
 				let ret = `${accr}${(index > 0) ? ',' : ''}${_Type.__getName__(value)}`;
 				return ret;
 			},"");
-			Object.defineProperty(generatedMeta,Symbol.toStringTag,{
-				writable: false,
-				enumerable: false,
-				configurable: true,
-				value: _func.name || `@_MetaFunction<${reduceArgument}>`
+			Object.defineProperties(generatedMeta, {
+				[Symbol.toStringTag] : {
+					writable: false,
+					enumerable: false,
+					configurable: true,
+					value: `@_MetaFunction<${reduceArgument}>`
+				},
+				'name' : {
+					writable: false,
+					enumerable: false,
+					configurable: true,
+					value : _func.name || `_MetaFunction<${reduceArgument}>`
+				}
 			})
+
 			return generatedMeta;
 		}
 		else{

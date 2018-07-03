@@ -114,32 +114,6 @@ class _Type {
 	*[Symbol.iterator](){
 		yield* (typeof this.value[Symbol.iterator] === "function") ? this.value : [this.value];
 	}
-	//methods
-	/**
-	 * override function
-	 * @return {String} return generic Struct string
-	 */
-	toString(){
-		let tempArray = [];
-		let _type = {};
-		let stackValue = "";
-		if(this.value instanceof _Type){
-			stackValue = this.value.toString();
-		}
-		else if(Array.isArray(this.value)) {
-			stackValue = this.value.reduce((accr,value,index,array)=>{
-				return `${accr}${(index > 0) ? ',' : ''}${_Type.__getName__(value)}`;
-			},"")
-			stackValue = `[${stackValue}]`;
-		}
-		/*else if(this.value.constructor === Object){
-			stackValue = JSON.stringify(this.value);
-		}*/
-		else if(this.value !== undefined && this.value !== null){
-			stackValue = _Type.__getName__(this.value);
-		}
-		return `${this.__getName__()}<${stackValue}>`
-	}
 	valueOf(){
 		return this.value;
 	}
