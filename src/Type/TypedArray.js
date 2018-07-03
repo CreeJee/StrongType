@@ -16,7 +16,7 @@ class _TypedArray extends Array{
 		}
 	}
 	static from(type,items){
-		return new _TypedArray(type,Array.from(items));
+		return new _TypedArray(type,...Array.from(items));
 	}
 	get [Symbol.toStringTag]() {
 		return '_TypedArray';
@@ -32,7 +32,6 @@ class _TypedArray extends Array{
 			value: type
 		});
 	}
-
 	push(){
 		let arg = argumentArray(arguments);
 		_TypedArray.__TypeCheck__(this.type,...arg);
