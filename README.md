@@ -52,7 +52,7 @@ bar._ = buzz  //it will thrown error
 				- 위 경우중 하나라도 일치하면 true
 	- \_\_equalType\_\_({value : Any , value : Any})
 		- \_\_typeCheck\_\_ 와 전제가 같음
-	- get [Symbol.toStringTag]()
+	- get \[Symbol.toStringTag\]()
 		- 주로 자신의 타입이 어떤지에 대한 사용
 - virtual
 	- clone()
@@ -165,7 +165,7 @@ const metaNumber = new ClassLamada(0); //throwen error
 	- \_\_Spread({type : Any,range : Number})
 	- \_\_Types({...type : Any})
 	- getFunc({type : Function})
-		- 콜백함수에 인자를 강제화 시킬때 사용
+		- callback의 인자를 강하게 받고싶은경우 사용
 	- apply({thisArg : Any , argsApply : Array})
 	- bind({thisArg : Any , ...args : Any})
 	- call({thisArg : Any , ...args : Any})
@@ -193,9 +193,9 @@ NumberArray.push("2"); // 타입과 다르니 에러
 ### method
 -  public
 	- constructor({type : Function , ...items : Any})
-		- items 값들은 타입과 같아야함 
+		- items 값들은 type을 생성자로 두어야함
 	- from({type : Function, items : Array})
-		- items 값들은 타입과 같아야함
+		- items 값들은 type을 생성자로 두어야함
 ## Enum
 열거형 대이터 처리
 > 배타버전 이며 사용시의 책임은 없음을 미리 명시합니다.
