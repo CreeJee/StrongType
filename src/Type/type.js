@@ -14,17 +14,11 @@ class _Type {
 	conversion(value){
 		return null; //default conversion is false
 	}
-	get __name(){
-		if(this.constructor === _Type){
+	get [Symbol.toStringTag](){
 			return "_Type";
-		}
-		else{
-			return this.constructor.name;
-		}
 	}
-	//static system(it will be change..?)
 	static __getName__(obj){
-		return ((obj.__name || "").toString().length > 0) ? obj.__name : (typeof obj === 'function' ? obj.name : "") || obj.constructor.name;
+		return obj[Symbol.toStringTag] !== undefined ? obj[Symbol.toStringTag] : obj.constructor.name;
 	}
 	__getName__(){
 		return _Type.__getName__(this);
@@ -77,10 +71,11 @@ class _Type {
 		//1. it is same object
 		//2. ref is constructor but,object is Instance
 		//3. just same type for constructor
-		else if(Object.is(ref,object) || ref === object.constructor || ref.constructor === object.constructor){
+		//4. 
+		else if(Object.is(ref,object) || ref === object.constructor || ref.constructor === object.constructor || (ref[Symbol.toStringTag] !== undefined && object[Symbol.toStringTag] !== undefined && ref[Symbol.toStringTag] === object[Symbol.toStringTag]) ){
 			return object;
 		}
-		throw new TypeError(`{need : [${_Type.__getName__(ref)} or ${ref.name}],value : ${_Type.__getName__(object)}} in {${this.toString()}}`)
+		throw new TypeError(`{need : [${_Type.__getName__(ref)} or ${ref.name}],value : ${_Type.__getName__(object)}} in {${ref.toString()}}`)
 	}
 	__typeCheck__(object){
 		return _Type.__typeCheck__(object,this);

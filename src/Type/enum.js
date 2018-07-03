@@ -1,7 +1,7 @@
 const _Type = require('./type.js');
 
 class Enum{
-	get __name(){
+	get [Symbol.toStringTag](){
 		return "Enum";
 	}
 	add(element){

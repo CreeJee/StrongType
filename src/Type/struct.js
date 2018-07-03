@@ -13,7 +13,7 @@ const _Struct = class _Struct extends _Type{
 			}
 		})
 	}
-	get __name(){
+	get [Symbol.toStringTag](){
 		return "_Struct";
 	}
 	toType(){

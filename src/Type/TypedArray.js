@@ -15,6 +15,12 @@ class _TypedArray extends Array{
 			items[k] = _Type.__typeCheck__(items[k],type);
 		}
 	}
+	static from(type,items){
+		return new _TypedArray(type,Array.from(items));
+	}
+	get [Symbol.toStringTag]() {
+		return '_TypedArray';
+	}
 	constructor(type,...items){
 		type = new ((type instanceof Function) ? type : type.constructor)(); // type to object (for constructor name)
 		_TypedArray.__TypeCheck__(type,...items);
@@ -26,6 +32,7 @@ class _TypedArray extends Array{
 			value: type
 		});
 	}
+
 	push(){
 		let arg = argumentArray(arguments);
 		_TypedArray.__TypeCheck__(this.type,...arg);
@@ -39,5 +46,6 @@ class _TypedArray extends Array{
 	toString(){
 		return this.toString();
 	}
+
 }
 module.exports = _TypedArray;

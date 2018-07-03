@@ -3,7 +3,7 @@ StrongType은 자바스크립트의 다른형태의 강타입 라이브러리 �
 ##이 라이브러리는 이런사람에게 권합니다
 1. 쓸대없이 함수의 인자에 전처리를 함으로서 로직이 늘어지는것을 싫어하는 사람. 
 2. 모든 함수및 생성자에 극단적으로 인자를 고정시킴으로서 확실하게 개발하길 원하는사람
->\_\_{FunctionName}\_\_ 와 유사한 함수명들은 내부의 특수한 목적으로 사용되며 동작은 보장하지 않습니다.
+>\_\_{FunctionName}\_\_ 와 유사한 함수명들은 내부의 특수한 목적으로 사용되며 당신의 의도한 동작은 보장하지 않습니다.
 ## 설치
 webpack4,babel을 이용한 변환은 현재 배타입니다.
 (Conversion using webpack is currently being tested.(beta))
@@ -43,20 +43,22 @@ bar._ = buzz  //it will thrown error
 			1. _T._Type 을 상속하지 않을때,빈 생성자에 대하여 처리가 되는경우  
 			2. _T._Type 을 상속할경우 생성자에 하나의 인자만 받을경우
 			모두 맞으면 clone된 인스턴스를 반환
-	- \_\_typeCheck\_\_({value : Any , value : Any})
-		- >  정상적으로 사용하기 위하여 한가지 전제를 필요로 합니다.
-				1. 생성자 이름이 같지않을경우
-				모두 맞으면 생성자 비교후 오브젝트 리턴 혹은 그전에 에러 리턴
+	- \_\_typeCheck\_\_({object : Any , ref : Any})
+		- >  비교조건 
+				1. 서로 같은 오브젝트인 경우
+				2. ref가 object.constructor과 같은경우
+				3. ref.constructor 가 object.constructor 와 같은경우
+				4. ref,object 둘다 Symbol.toStringTag 값이 undefined가 아니면서 둘다 Symbol.toStringTag 값이 같을경우 
+				- 위 경우중 하나라도 일치하면 true
 	- \_\_equalType\_\_({value : Any , value : Any})
 		- \_\_typeCheck\_\_ 와 전제가 같음
+	- get [Symbol.toStringTag]()
+		- 주로 자신의 타입이 어떤지에 대한 사용
 - virtual
 	- clone()
 		- 참조를 끊기위한 사용 
 	- vaild({value : Any})
 	- conversion({value : Any}) 
-	- get __name()
-		- >	생성자 이름을 식별하기 위함
-			(반드시 \_T.\_Type 를 상속하지 않아도 그 숙성을 생성자 이름으로 인식하지만 권장하진 않습니다.)
 ## _T._Struct (extends _Type)
 ### 사용
 ```javascript
@@ -162,6 +164,8 @@ const metaNumber = new ClassLamada(0); //throwen error
 -  public
 	- \_\_Spread({type : Any,range : Number})
 	- \_\_Types({...type : Any})
+	- getFunc({type : Function})
+		- 콜백함수에 인자를 강제화 시킬때 사용
 	- apply({thisArg : Any , argsApply : Array})
 	- bind({thisArg : Any , ...args : Any})
 	- call({thisArg : Any , ...args : Any})
@@ -169,8 +173,7 @@ const metaNumber = new ClassLamada(0); //throwen error
 	- vaild({value : Any})
 	- conversion({value : Any})  
 ## _TypedArray (extends Array)
-배열에서 확장한것입니다.
-> 배타버전 이며 사용시의 책임은 없음을 미리 명시합니다.
+배열에서 확장됨
 ### 사용
 ```javascript
 const foo = new _T.TypedArray({type: Any , ...items : Any});
@@ -189,8 +192,10 @@ NumberArray.push("2"); // 타입과 다르니 에러
 ```
 ### method
 -  public
-	- constructor({type : Any , ...items : Any})
-		- 타입과 같아야함 
+	- constructor({type : Function , ...items : Any})
+		- items 값들은 타입과 같아야함 
+	- from({type : Function, items : Array})
+		- items 값들은 타입과 같아야함
 ## Enum
 열거형 대이터 처리
 > 배타버전 이며 사용시의 책임은 없음을 미리 명시합니다.

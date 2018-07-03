@@ -36,7 +36,7 @@ class _MetaBoundStruct{
  * 	하게된다면 _MetaFunction에서 진행하게 될탠데 합당한가?
  */
 class __Spread{
-	get __name(){
+	get [Symbol.toStringTag](){
 		return "__Spread";
 	}
 	constructor(type,length){
@@ -48,7 +48,7 @@ class __Spread{
 	}
 };
 class __Types extends Enum{
-	get __name(){
+	get [Symbol.toStringTag](){
 		return "__Types";
 	}
 	constructor(...types){
@@ -215,7 +215,7 @@ const _MetaFunction = class _MetaFunction extends _Type{
 				let ret = `${accr}${(index > 0) ? ',' : ''}${_Type.__getName__(value)}`;
 				return ret;
 			},"");
-			Object.defineProperty(generatedMeta,"name",{
+			Object.defineProperty(generatedMeta,Symbol.toStringTag,{
 				writable: false,
 				enumerable: false,
 				configurable: true,

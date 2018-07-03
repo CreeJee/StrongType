@@ -10,7 +10,7 @@ const TypedArray = require("./TypedArray.js");
 
 //testClass
 class Block extends _Type{
-	get __name(){
+	get [Symbol.toStringTag](){
 		return "Block";
 	}
 	constructor(value){
