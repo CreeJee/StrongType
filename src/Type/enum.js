@@ -31,18 +31,9 @@ class Enum{
 		}
 	}
 	constructor(...enums){
-		Object.defineProperty(this,'length',{
-			configurable : true,
-			enumerable : false,
-			writable : true,
-			value : 0
-		});
-		Object.defineProperty(this,'__keys__',{
-			configurable : false,
-			enumerable : false,
-			writable : false,
-			value : []
-		});
+		const nameGetter = () => {
+			return `${this[Symbol.toStringTag]}<${Array.from(this).toString()}>`
+		};
 		enums.map((element,index) => {
 			if(isNaN(parseInt(element))){
 				if(this[element] !== undefined){
@@ -55,8 +46,33 @@ class Enum{
 			else{
 				throw new Error('An enum member cannot have a numeric name.')
 			}
-		
 		});
+		Object.defineProperties(this, {
+			'length' : {
+				configurable : true,
+				enumerable : false,
+				writable : true,
+				value : 0
+			},
+			'__keys__' : {
+				configurable : false,
+				enumerable : false,
+				writable : false,
+				value : []
+			},
+			[Symbol.toStringTag] : {
+				writable: false,
+				enumerable: false,
+				configurable: true,
+				get : nameGetter
+			},
+			'name' : {
+				writable: false,
+				enumerable: false,
+				configurable: true,
+				get: nameGetter
+			}
+		})
 	}
 }
 module.exports = Enum;

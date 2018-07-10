@@ -32,14 +32,29 @@ class _MetaBoundStruct{
  */
 class __Spread{
 	get [Symbol.toStringTag](){
-		return "__Spread";
+		return this.constructor.name;
 	}
 	constructor(type,length){
 		if (typeof type !== "function") {
-
+			throw new Error("_MetaFunction.__Spread is must function");
 		}
 		this.type = type;
 		this.length = (Number.isInteger(length)) ? length : Infinity;
+		const __typeName__ = _Type.__getName__(type);
+		Object.defineProperties(this, {
+			[Symbol.toStringTag] : {
+				writable: false,
+				enumerable: false,
+				configurable: true,
+				value: `__Spread<${__typeName__}>`
+			},
+			'name' : {
+				writable: false,
+				enumerable: false,
+				configurable: true,
+				value: `__Spread<${__typeName__}>`
+			}
+		})
 	}
 };
 class __Types extends Enum{
