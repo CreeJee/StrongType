@@ -5,32 +5,44 @@ const argumentArray = (arg) => {
 	}
 	return arg.length === 1 ? [arg[0]] : Array.apply(null, arg);
 }
+const toStringTag = '_TypedArray';
 
 class _TypedArray extends Array{
-	get __name(){
-		return "_TypedArray";
-	}
 	static __TypeCheck__(type,...items){
 		for(let k in items){
 			items[k] = _Type.__typeCheck__(items[k],type);
 		}
 	}
-	static from(type,items){
+	static from(type,items = []){
+		if (!Array.isArray(items)) {
+			throw new Error('Argument : [Type:Function,items:Array or undefined (it acts empty array)]');
+		}
 		return new _TypedArray(type,...Array.from(items));
 	}
+	/*static [Symbol.hasInstance](instance){
+		return this === instance.constructor; // TODO : 좋은 방향으로 수정하기
+	}*/
 	get [Symbol.toStringTag]() {
-		return '_TypedArray';
-	}
+		return toStringTag;
+	}	
 	constructor(type,...items){
-		type = new ((type instanceof Function) ? type : type.constructor)(); // type to object (for constructor name)
+		const __type = new ((type instanceof Function) ? type : type.constructor)(); // type to object (for constructor name)
 		_TypedArray.__TypeCheck__(type,...items);
 		super(...items);
-		Object.defineProperty(this,"type",{
-			enumerable: false,
-			configurable: true,
-			writable: false,
-			value: type
-		});
+		Object.defineProperties(this,{
+			"type" : {
+				enumerable: false,
+				configurable: true,
+				writable: false,
+				value: __type
+			},
+			[Symbol.toStringTag] : {
+				enumerable: false,
+				configurable: true,
+				writable: false,
+				value: `${toStringTag}<${__type[Symbol.toStringTag] || type.name}>`
+			}
+		})
 	}
 	push(){
 		let arg = argumentArray(arguments);

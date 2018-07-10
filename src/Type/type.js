@@ -18,7 +18,7 @@ class _Type {
 			return "_Type";
 	}
 	static __getName__(obj){
-		return obj[Symbol.toStringTag] !== undefined ? obj[Symbol.toStringTag] : obj.constructor.name;
+		return obj[Symbol.toStringTag] !== undefined ? obj[Symbol.toStringTag] : ( ((typeof obj === "function") ? obj.name : "") || obj.constructor.name );
 	}
 	__getName__(){
 		return _Type.__getName__(this);
@@ -56,26 +56,28 @@ class _Type {
 	 */
 	static __typeCheck__(object,ref){
 		let conversionValue = {};
-		let vaildValue = {}
+		let vaildValue = {};
+		//convert primitive type to object
+		let __object = (typeof object === "object" ? object : new object.constructor(object));
 		if (ref instanceof _Type) {
-			conversionValue = ref.conversion(object);
-			vaildValue = ref.vaild(object);
+			conversionValue = ref.conversion(object) || object;
+			vaildValue = ref.vaild(conversionValue);
 			if(vaildValue){
-				return conversionValue || object;
-			}
-			else if(conversionValue instanceof _Type){
 				return conversionValue;
 			}
+			/*else if(conversionValue instanceof _Type){
+				return conversionValue;
+			}*/
 		}
 		//each case
 		//1. it is same object
 		//2. ref is constructor but,object is Instance
 		//3. just same type for constructor
 		//4. 
-		else if(Object.is(ref,object) || ref === object.constructor || ref.constructor === object.constructor || (ref[Symbol.toStringTag] !== undefined && object[Symbol.toStringTag] !== undefined && ref[Symbol.toStringTag] === object[Symbol.toStringTag]) ){
+		else if(Object.is(ref,__object) || __object instanceof ref || (ref[Symbol.toStringTag] !== undefined && __object[Symbol.toStringTag] !== undefined && ref[Symbol.toStringTag] === __object[Symbol.toStringTag]) ){
 			return object;
 		}
-		throw new TypeError(`{need : [${_Type.__getName__(ref)} or ${ref.name}],value : ${_Type.__getName__(object)}} in {${ref.toString()}}`)
+		throw new TypeError(`{need : [${_Type.__getName__(ref)}],value : ${_Type.__getName__(object)}} in {${ref.toString()}}`)
 	}
 	__typeCheck__(object){
 		return _Type.__typeCheck__(object,this);

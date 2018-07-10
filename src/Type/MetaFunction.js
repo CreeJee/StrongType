@@ -1,15 +1,10 @@
 //logic
 const _Type = require('./type.js');
 const Enum = require('./enum.js');
+//바벨 isClass처리 채크 및 오류 픽스
 function isClass(v) {
-  	var toString = Function.prototype.toString;
-	function fnBody(fn) {
-		return toString.call(fn).replace(/^[^{]*{\s*/,'').replace(/\s*}[^}]*$/,'');
-	}
-	return (typeof fn === 'function' &&
-	        (/^class\s/.test(toString.call(fn)) ||
-	          (/^.*classCallCheck\(/.test(fnBody(fn)))) // babel.js
-	);
+  	const data = Object.getOwnPropertyDescriptors(v);
+  	return data.prototype && !data.prototype.writable;
 }
 class _MetaBoundStruct{
 	constructor(func){
@@ -105,7 +100,7 @@ class __Types extends Enum{
 	
  */
 const _MetaFunction = class _MetaFunction extends _Type{
-	get __name(){
+	get [Symbol.toStringTag](){
 		return "_MetaFunction";
 	}
 	static __Spread(type,range){
