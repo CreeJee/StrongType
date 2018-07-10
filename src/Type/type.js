@@ -58,7 +58,7 @@ class _Type {
 		let conversionValue = {};
 		let vaildValue = {};
 		//convert primitive type to object
-		let __object = ((typeof object === "object" || object === "function") ? object : new object.constructor(object));
+		let __object = ((typeof object === "object" || typeof object === "function") ? object : new object.constructor(object));
 		if (ref instanceof _Type) {
 			conversionValue = ref.conversion(object) || object;
 			vaildValue = ref.vaild(conversionValue);
