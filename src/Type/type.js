@@ -8,10 +8,10 @@ class _Type {
 		this.value = value;
 	}
 	//inner setting
-	vaild(object) {
+	static vaild(object) {
 		return true; //when Type is Any
 	}
-	conversion(value){
+	static conversion(value){
 		return null; //default conversion is false
 	}
 	get [Symbol.toStringTag](){
@@ -69,11 +69,12 @@ class _Type {
 	 * @return {Any}        [description]
 	 */
 	static __typeCheck__(object,ref){
+		if (typeof ref !== "function") {
+			throw new Error("second argument is Must Function(callable and Object)")
+		}
 		let conversionValue = {};
 		let vaildValue = {};
-		//convert primitive type to object
-		let __object = ((typeof object === "object" || typeof object === "function") ? object : new object.constructor(object));
-		if (ref instanceof _Type) {
+		if (ref.prototype instanceof _Type) {
 			conversionValue = ref.conversion(object) || object;
 			vaildValue = ref.vaild(conversionValue);
 			if(vaildValue){
@@ -88,7 +89,7 @@ class _Type {
 		//2. ref is constructor but,object is Instance
 		//3. just same type for constructor
 		//4. 
-		else if(Object.is(ref,__object) || __object instanceof ref || (ref[Symbol.toStringTag] !== undefined && __object[Symbol.toStringTag] !== undefined && ref[Symbol.toStringTag] === __object[Symbol.toStringTag]) ){
+		else if(Object.is(ref,object) || object instanceof ref || (ref[Symbol.toStringTag] !== undefined && object[Symbol.toStringTag] !== undefined && ref[Symbol.toStringTag] === object[Symbol.toStringTag]) ){
 			return object;
 		}
 		throw new TypeError(`{need : [${_Type.__getName__(ref)}],value : ${_Type.__getName__(object)}} in {${ref.toString()}}`)
