@@ -72,8 +72,13 @@ class _Type {
 		if (typeof ref !== "function") {
 			throw new Error("second argument is Must Function(callable and Object)")
 		}
+		if (!Object.is(object,ref) && (object === null || object === undefined)) {
+			throw new Error(`first argument is not accept "null" and "undefined"`);
+		}
 		let conversionValue = {};
 		let vaildValue = {};
+		let objType = typeof object;
+		const __object = (objType === "function" || objType === "object") ? object : new object.constructor(object);
 		if (ref.prototype instanceof _Type) {
 			conversionValue = ref.conversion(object) || object;
 			vaildValue = ref.vaild(conversionValue);
@@ -89,7 +94,7 @@ class _Type {
 		//2. ref is constructor but,object is Instance
 		//3. just same type for constructor
 		//4. 
-		else if(Object.is(ref,object) || object instanceof ref || (ref[Symbol.toStringTag] !== undefined && object[Symbol.toStringTag] !== undefined && ref[Symbol.toStringTag] === object[Symbol.toStringTag]) ){
+		else if(Object.is(ref,__object) || __object instanceof ref || (ref[Symbol.toStringTag] !== undefined && __object[Symbol.toStringTag] !== undefined && ref[Symbol.toStringTag] === __object[Symbol.toStringTag]) ){
 			return object;
 		}
 		throw new TypeError(`{need : [${_Type.__getName__(ref)}],value : ${_Type.__getName__(object)}} in {${ref.toString()}}`)
