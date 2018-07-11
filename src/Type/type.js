@@ -38,12 +38,26 @@ class _Type {
 			return ( new value.constructor( _Type.__generateInstance__(value._) ) );
 		}
 		else if(typeof value.constructor === "function"){
-			return (new value.constructor());
+			return (new value.constructor(value));
 		}
 	}
 	clone(){
 		return _Type.__generateInstance__(this);
 	}
+	static __safeStatic__(object){
+		return _Type.__generateInstance(_Type.__static__(object,true));
+	}
+	static __static__(object,isProto){
+		if (object === null && object === undefined) {
+			throw new TypeError("first object only object");
+		}
+		return (isProto) ? object.constructor.prototype : object.constructor;
+	}
+	get static(){
+		return _Type.__safeStatic__(this);
+	}
+
+
 	/**{}
 	 * __typeCheck__
 	 * @private
